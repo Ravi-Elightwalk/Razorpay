@@ -1,5 +1,4 @@
-define(
-    [
+define([
         'uiComponent',
         'Magento_Checkout/js/model/payment/renderer-list'
     ],
