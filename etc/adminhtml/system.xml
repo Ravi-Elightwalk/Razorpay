@@ -19,12 +19,18 @@
                 <field id="merchant_name_override" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Merchant Name</label>
                     <config_path>payment/razorpay/merchant_name_override</config_path>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
                 </field>
                 
                 <field id="payment_action" translate="label" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Payment Action</label>
                     <source_model>Razorpay\Magento\Model\PaymentAction</source_model>
                     <config_path>payment/razorpay/payment_action</config_path>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
                 </field>
 
 
@@ -32,18 +38,27 @@
                     <label>API Key</label>
                     <comment>**Required (Enter test key ID for testing)**</comment>
                     <config_path>payment/razorpay/key_id</config_path>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
                 </field>
 
                 <field id="key_secret" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>API Key Secret</label>
                     <comment>**Required (Enter test key secret for testing)**</comment>
                     <config_path>payment/razorpay/key_secret</config_path>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
                 </field>
 
                 <field id="allowspecific" translate="label" type="allowspecific" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Allow Applicable Countries</label>
                     <source_model>Elightwalk\Razorpay\Model\Config\Source\Allspecificcountries</source_model>
                     <config_path>payment/razorpay/allowspecific</config_path>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
                 </field>
 
                 <field id="specificcountry" translate="label" type="multiselect" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="0">
@@ -51,12 +66,19 @@
                     <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
                     <can_be_empty>1</can_be_empty>
                     <config_path>payment/razorpay/specificcountry</config_path>
+                    <depends>
+                        <field id="active">1</field>
+                        <field id="allowspecific">1</field>
+                    </depends>
                 </field>
 
                 <field id="card_active" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Card</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>payment/razorpay/card_active</config_path>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
                 </field>
 
                 <field id="card_type" translate="label" type="select" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="0">
@@ -64,15 +86,17 @@
                     <source_model>Elightwalk\Razorpay\Model\Config\Source\OptionArray::cardtypeOptionArray</source_model>
                     <config_path>payment/razorpay/card_type</config_path>
                     <depends>
+                        <field id="active">1</field>
                         <field id="card_active">1</field>
                     </depends>
                 </field>
 
-                <field id="allowspecificnetwork" translate="label" type="allowspecific" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="allowspecificnetwork" translate="label" type="select" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Card Network</label>
                     <source_model>Elightwalk\Razorpay\Model\Config\Source\OptionArray::cardOptionArray</source_model>
                     <config_path>payment/razorpay/allowspecificnetwork</config_path>
                     <depends>
+                        <field id="active">1</field>
                         <field id="card_active">1</field>
                     </depends>
                 </field>
@@ -83,7 +107,9 @@
                     <can_be_empty>1</can_be_empty>
                     <config_path>payment/razorpay/card_network</config_path>
                     <depends>
+                        <field id="active">1</field>
                         <field id="card_active">1</field>
+                        <field id="allowspecificnetwork">1</field>
                     </depends>
                 </field>
 
@@ -93,7 +119,9 @@
                     <can_be_empty>1</can_be_empty>
                     <config_path>payment/razorpay/allowspecificcard</config_path>
                     <depends>
+                        <field id="active">1</field>
                         <field id="card_active">1</field>
+                        
                     </depends>
                 </field>
 
@@ -103,7 +131,9 @@
                     <can_be_empty>1</can_be_empty>
                     <config_path>payment/razorpay/specificcard</config_path>
                     <depends>
+                        <field id="active">1</field>
                         <field id="card_active">1</field>
+                        <field id="allowspecificcard">1</field>
                     </depends>
                 </field>
                     
@@ -111,6 +141,9 @@
                     <label>Netbanking</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>payment/razorpay/netbanking_active</config_path>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
                 </field>
 
                 <field id="allow_netbanking" translate="label" type="select" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="0">
@@ -118,6 +151,7 @@
                     <source_model>Elightwalk\Razorpay\Model\Config\Source\OptionArray::netbankingOptArr</source_model>
                     <config_path>payment/razorpay/allow_netbanking</config_path>
                     <depends>
+                        <field id="active">1</field>
                         <field id="netbanking_active">1</field>
                     </depends>
                 </field>
@@ -128,7 +162,9 @@
                     <can_be_empty>1</can_be_empty>
                     <config_path>payment/razorpay/specific_netbanks</config_path>
                     <depends>
+                        <field id="active">1</field>
                         <field id="netbanking_active">1</field>
+                        <field id="allow_netbanking">1</field>
                     </depends>
                 </field>
 
@@ -136,6 +172,9 @@
                     <label>Wallet</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>payment/razorpay/wallet_active</config_path>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
                 </field>
 
                 <field id="allow_wallet" translate="label" type="select" sortOrder="51" showInDefault="1" showInWebsite="1" showInStore="0">
@@ -143,6 +182,7 @@
                     <source_model>Elightwalk\Razorpay\Model\Config\Source\OptionArray::walletOptArr</source_model>
                     <config_path>payment/razorpay/allow_wallet</config_path>
                     <depends>
+                        <field id="active">1</field>
                         <field id="wallet_active">1</field>
                     </depends>
                 </field>
@@ -153,7 +193,9 @@
                     <can_be_empty>1</can_be_empty>
                     <config_path>payment/razorpay/specific_netbanks</config_path>
                     <depends>
+                        <field id="active">1</field>
                         <field id="wallet_active">1</field>
+                        <field id="allow_wallet">1</field>
                     </depends>
                 </field>
 
@@ -161,6 +203,9 @@
                     <label>UPI</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>payment/razorpay/upi_active</config_path>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
                 </field>
 
                 <field id="allow_upi" translate="label" type="select" sortOrder="61" showInDefault="1" showInWebsite="1" showInStore="0">
@@ -168,6 +213,7 @@
                     <source_model>Elightwalk\Razorpay\Model\Config\Source\OptionArray::upiOptArr</source_model>
                     <config_path>payment/razorpay/allow_upi</config_path>
                     <depends>
+                        <field id="active">1</field>
                         <field id="upi_active">1</field>
                     </depends>
                 </field>
@@ -179,7 +225,9 @@
                     <can_be_empty>1</can_be_empty>
                     <config_path>payment/razorpay/specific_upi</config_path>
                     <depends>
+                        <field id="active">1</field>
                         <field id="upi_active">1</field>
+                        <field id="allow_upi">1</field>
                     </depends>
                 </field>
 

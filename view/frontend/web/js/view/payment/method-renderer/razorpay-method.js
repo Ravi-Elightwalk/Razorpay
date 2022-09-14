@@ -324,7 +324,28 @@ define([
                         integration: 'magento',
                         integration_version: data.module_version,
                         integration_parent_version: data.maze_version,
-                    }
+                    },  
+                    // config: {
+                    //     display: {
+                    //         blocks: {
+                    //             banks: {
+                    //                 name: 'All Methods',
+                    //                 instruments: [
+                    //                     { method: 'upi' }, 
+                    //                     { method: 'card' }, 
+                    //                     { method: 'wallet' }, 
+                    //                     { method: 'netbanking' }, 
+                    //                     { method: 'emi' }
+                    //                 ],
+                    //             },
+                    //         },
+                    //         sequence: ['block.banks'],
+                    //         preferences: {
+                    //             show_default_blocks: false,
+                    //         },
+                    //     },
+                    // },
+                    
                 };
 
                 if (data.quote_currency !== 'INR') {
