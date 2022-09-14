@@ -219,11 +219,11 @@ class Order extends \Elightwalk\Razorpay\Controller\BaseController {
                 if ($createNewOrder) {
 
                     $order = $this->rzp->order->create([
-                        'amount' => $amount,
-                        'receipt' => $receipt_id,
-                        'currency' => $this->getQuote()->getQuoteCurrencyCode(),
-                        'payment_capture' => $payment_capture,
-                        'app_offer' => ($this->getDiscount() > 0) ? 1 : 0
+                        'amount'            => $amount,
+                        'receipt'           => $receipt_id,
+                        'currency'          => $this->getQuote()->getQuoteCurrencyCode(),
+                        'payment_capture'   => $payment_capture,
+                        'app_offer'         => ($this->getDiscount() > 0) ? 1 : 0
                     ]);
 
                 } else {
@@ -246,17 +246,18 @@ class Order extends \Elightwalk\Razorpay\Controller\BaseController {
                     $merchantPreferences    = $this->getMerchantPreferences();
 
                     $responseContent = [
-                        'success'           => true,
-                        'rzp_order'         => $order->id,
-                        'order_id'          => $receipt_id,
-                        'amount'            => $order->amount,
-                        'quote_currency'    => $this->getQuote()->getQuoteCurrencyCode(),
-                        'quote_amount'      => number_format($this->getQuote()->getGrandTotal(), 2, ".", ""),
-                        'maze_version'      => $maze_version,
-                        'module_version'    => $module_version,
-                        'is_hosted'         => $merchantPreferences['is_hosted'],
-                        'image'             => $merchantPreferences['image'],
-                        'embedded_url'      => $merchantPreferences['embedded_url'],
+                        'success'        => true,
+                        'rzp_order'      => $order->id,
+                        'order_id'       => $receipt_id,
+                        'amount'         => $order->amount,
+                        'quote_currency' => $this->getQuote()->getQuoteCurrencyCode(),
+                        'quote_amount'   => number_format($this->getQuote()->getGrandTotal(), 2, ".", ""),
+                        'maze_version'   => $maze_version,
+                        'module_version' => $module_version,
+                        'is_hosted'      => $merchantPreferences['is_hosted'],
+                        'image'          => $merchantPreferences['image'],
+                        'embedded_url'   => $merchantPreferences['embedded_url'],
+                        'demo'           => false,  // payment/razorpay/netbanking_active
                     ];
 
                     $code = 200;
