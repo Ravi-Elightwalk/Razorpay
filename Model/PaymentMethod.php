@@ -17,7 +17,8 @@ use Magento\Payment\Model\InfoInterface;
 use Elightwalk\Razorpay\Model\Config;
 use Magento\Catalog\Model\Session;
 
-class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod {
+class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod 
+{
 
     const CHANNEL_NAME                  = 'Magento';
     const METHOD_CODE                   = 'razorpay';
@@ -25,31 +26,18 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod {
     const CURRENCY                      = 'INR';
 
     protected $_code                    = self::METHOD_CODE;
-
     protected $_canAuthorize            = true;
-
     protected $_canCapture              = true;
-
     protected $_canRefund               = true;
-
-    protected $_canUseInternal          = false;        //Disable module for Magento Admin Order
-
+    protected $_canUseInternal          = false;
     protected $_canUseCheckout          = true;
-
     protected $_canRefundInvoicePartial = true;
-
     protected $requestMaskedFields      = null;
-
     protected $config;
-
     protected $request;
-
     protected $salesTransactionCollectionFactory;
-
     protected $productMetaData;
-
     protected $regionFactory;
-
     protected $orderRepository;
 
     public function __construct(
@@ -69,6 +57,7 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod {
         \Elightwalk\Razorpay\Controller\Payment\Order $order,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
+        \Elightwalk\Razorpay\Model\OrderLink $orderLink,
         array $data = []
     ) {
         parent::__construct(
@@ -96,6 +85,7 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod {
         $this->rzp = new Api($this->key_id, $this->key_secret);
 
         $this->order = $order;
+        $this->orderLink = $orderLink;
 
         $this->rzp->setHeader('User-Agent', 'Razorpay/'. $this->getChannel());
     }
@@ -130,9 +120,10 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod {
      * @return $this
      * @throws LocalizedException
      */
-    public function authorize(InfoInterface $payment, $amount) {
-        try {
-
+    public function authorize(InfoInterface $payment, $amount) 
+    {
+        try 
+        {
             /** @var \Magento\Sales\Model\Order\Payment $payment */
             $order = $payment->getOrder();
             $orderId = $order->getIncrementId();
@@ -144,10 +135,7 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod {
             //validate RzpOrderamount with quote/order amount before signature
             $orderAmount = (int) (number_format($order->getGrandTotal() * 100, 0, ".", ""));
 
-            $_objectManager  = \Magento\Framework\App\ObjectManager::getInstance();
-
-            $orderLinkCollection = $_objectManager->get('Elightwalk\Razorpay\Model\OrderLink')
-                                                     ->getCollection()
+            $orderLinkCollection = $this->orderLink->getCollection()
                                                     ->addFilter('quote_id', $order->getQuoteId())
                                                     ->getFirstItem();
 
@@ -157,14 +145,14 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod {
 
                 //set request data based on redirect flow
                 $request['paymentMethod']['additional_data'] = [
-                    'rzp_payment_id' => $_POST['razorpay_payment_id'],
-                    'rzp_order_id' => $_POST['razorpay_order_id'],
-                    'rzp_signature' => $_POST['razorpay_signature']
+                    'rzp_payment_id'    => $_POST['razorpay_payment_id'],
+                    'rzp_order_id'      => $_POST['razorpay_order_id'],
+                    'rzp_signature'     => $_POST['razorpay_signature']
                 ];
             }
 
-            if((empty($request) === true) and (count($_POST) === 0)) {
-
+            if((empty($request) === true) and (count($_POST) === 0)) 
+            {
                 //webhook cron call
                 //update orderLink
                 $isWebhookCall = true;
@@ -385,14 +373,12 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod {
         );
 
         //update orderLink
-        $_objectManager  = \Magento\Framework\App\ObjectManager::getInstance();
 
-        $orderLinkCollection = $_objectManager->get('Elightwalk\Razorpay\Model\OrderLink')
-                                                   ->getCollection()
-                                                   ->addFieldToSelect('entity_id')
-                                                   ->addFilter('quote_id', $order->getQuoteId())
-                                                   ->addFilter('rzp_order_id', $rzpOrderId)
-                                                   ->getFirstItem();
+        $orderLinkCollection = $this->orderLink->getCollection()
+                                                ->addFieldToSelect('entity_id')
+                                                ->addFilter('quote_id', $order->getQuoteId())
+                                                ->addFilter('rzp_order_id', $rzpOrderId)
+                                                ->getFirstItem();
 
         $orderLink = $orderLinkCollection->getData();
 

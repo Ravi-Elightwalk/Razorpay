@@ -14,6 +14,7 @@ class Order extends \Elightwalk\Razorpay\Controller\BaseController {
     protected $cache;
     protected $orderRepository;
     protected $logger;
+    protected $data;
 
     
     public function __construct(
@@ -25,7 +26,8 @@ class Order extends \Elightwalk\Razorpay\Controller\BaseController {
         // \Elightwalk\Razorpay\Model\CheckoutFactory $checkoutFactory,
         \Magento\Framework\App\CacheInterface $cache,
         \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
+        \Elightwalk\Razorpay\Helper\Data $data
     ) {
         parent::__construct(
             $context,
@@ -43,6 +45,7 @@ class Order extends \Elightwalk\Razorpay\Controller\BaseController {
         $this->logger          = $logger;
 
         $this->objectManagement   = \Magento\Framework\App\ObjectManager::getInstance();
+        $this->data = $data;
     }
 
     public function execute() {
@@ -140,7 +143,7 @@ class Order extends \Elightwalk\Razorpay\Controller\BaseController {
             $this->logger->info("Email field is required");
 
             $responseContent = [
-                'message'   => "Email field is required",
+                'message'   => __("Email field is required"),
                 'parameters' => []
             ];
 
@@ -150,7 +153,7 @@ class Order extends \Elightwalk\Razorpay\Controller\BaseController {
         if(empty($this->getQuote()->getBillingAddress()->getPostcode()) === true) {
 
             $responseContent = [
-                'message'   => "Billing Address is required",
+                'message'   => __("Billing Address is required"),
                 'parameters' => []
             ];
 
@@ -163,7 +166,7 @@ class Order extends \Elightwalk\Razorpay\Controller\BaseController {
             if(empty($this->getQuote()->getShippingAddress()->getShippingMethod()) === true) {
 
                 $responseContent = [
-                    'message'   => "Shipping method is required",
+                    'message'   => __("Shipping method is required"),
                     'parameters' => []
                 ];
 
@@ -173,7 +176,7 @@ class Order extends \Elightwalk\Razorpay\Controller\BaseController {
             if(empty($this->getQuote()->getShippingAddress()->getPostcode()) === true) {
 
                 $responseContent = [
-                    'message'   => "Shipping Address is required",
+                    'message'   => __("Shipping Address is required"),
                     'parameters' => []
                 ];
 
@@ -235,7 +238,7 @@ class Order extends \Elightwalk\Razorpay\Controller\BaseController {
                 }
 
                 $responseContent = [
-                    'message'   => 'Unable to create your order. Please contact support.',
+                    'message'   => __('Unable to create your order. Please contact support.'),
                     'parameters' => []
                 ];
 
@@ -257,7 +260,7 @@ class Order extends \Elightwalk\Razorpay\Controller\BaseController {
                         'is_hosted'      => $merchantPreferences['is_hosted'],
                         'image'          => $merchantPreferences['image'],
                         'embedded_url'   => $merchantPreferences['embedded_url'],
-                        'demo'           => false,  // payment/razorpay/netbanking_active
+                        'rzp_config'     => $this->getRzpConfig("payment/razorpay"), 
                     ];
 
                     $code = 200;
@@ -286,14 +289,14 @@ class Order extends \Elightwalk\Razorpay\Controller\BaseController {
             catch(\Razorpay\Api\Errors\Error $e) {
 
                 $responseContent = [
-                    'message1'   => $e->getMessage(),
+                    'message'   => $e->getMessage(),
                     'parameters' => []
                 ];
             }
             catch(\Exception $e) {
 
                 $responseContent = [
-                    'message2'   => $e->getMessage(),
+                    'message'   => $e->getMessage(),
                     'parameters' => []
                 ];
             }
@@ -351,4 +354,58 @@ class Order extends \Elightwalk\Razorpay\Controller\BaseController {
 
         return ($this->getQuote()->getBaseSubtotal() - $this->getQuote()->getBaseSubtotalWithDiscount());
     }
+
+    public function getRzpConfig($path) {
+
+        $data = ($path != "") ? $this->data->getScopeConfig($path) : null;
+        
+        $instruments = array();
+        if ($data != null) {
+
+            if ($data['active_card']) {
+                $card['method'] = 'card';
+                if ($data['allow_card_network']) {
+                    $card['networks'] = explode( ',', $data['card_networks']);
+                }
+                if ($data['allow_suppoted_card']) {
+                    $card['issuers'] = explode( ',', $data['suppoted_cards']);
+                }
+                if ($data['card_type'] != "0") {
+                    $card['types'] = ($data['card_type'] == "1") ? array("credit") : array("debit") ;
+                 }
+                array_push($instruments, $card);
+            }
+
+            if ($data['active_netbanking']) {
+                $netbanking['method'] = 'netbanking';
+                if ($data['allow_netbanking_banks']) {
+                    $netbanking['banks'] = explode( ',', $data['netbanking_banks']);
+                }
+
+                array_push($instruments, $netbanking);
+            }
+
+            if ($data['active_upi']) {
+                $upi['method'] = 'upi';
+                if ($data['allow_upi']) {
+                    $upi['apps'] = explode( ',', $data['upi_apps']);
+                }
+
+                array_push($instruments, $upi);
+            }
+
+            if ($data['active_wallet']) {
+                $wallet['method'] = 'wallet';
+                if ($data['allow_wallet_apps']) {
+                    $wallet['wallets'] = explode( ',', $data['wallet_apps']);
+                }
+
+                array_push($instruments, $wallet);
+            }
+
+        }
+
+        return $instruments;
+    }
+
 }

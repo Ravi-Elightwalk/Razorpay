@@ -72,10 +72,10 @@
                     </depends>
                 </field>
 
-                <field id="card_active" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="active_card" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Card</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <config_path>payment/razorpay/card_active</config_path>
+                    <config_path>payment/razorpay/active_card</config_path>
                     <depends>
                         <field id="active">1</field>
                     </depends>
@@ -87,122 +87,122 @@
                     <config_path>payment/razorpay/card_type</config_path>
                     <depends>
                         <field id="active">1</field>
-                        <field id="card_active">1</field>
+                        <field id="active_card">1</field>
                     </depends>
                 </field>
 
-                <field id="allowspecificnetwork" translate="label" type="select" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="allow_card_network" translate="label" type="select" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Card Network</label>
                     <source_model>Elightwalk\Razorpay\Model\Config\Source\OptionArray::cardOptionArray</source_model>
-                    <config_path>payment/razorpay/allowspecificnetwork</config_path>
+                    <config_path>payment/razorpay/allow_card_network</config_path>
                     <depends>
                         <field id="active">1</field>
-                        <field id="card_active">1</field>
+                        <field id="active_card">1</field>
                     </depends>
                 </field>
 
-                <field id="card_network" translate="label" type="multiselect" sortOrder="33" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="card_networks" translate="label" type="multiselect" sortOrder="33" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Select Card Network</label>
                     <source_model>Elightwalk\Razorpay\Model\Config\Source\AllSpecificArray::cardnetworkOptArray</source_model>
                     <can_be_empty>1</can_be_empty>
-                    <config_path>payment/razorpay/card_network</config_path>
+                    <config_path>payment/razorpay/card_networks</config_path>
                     <depends>
                         <field id="active">1</field>
-                        <field id="card_active">1</field>
-                        <field id="allowspecificnetwork">1</field>
+                        <field id="active_card">1</field>
+                        <field id="allow_card_network">1</field>
                     </depends>
                 </field>
 
-                <field id="allowspecificcard" translate="label" type="select" sortOrder="34" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="allow_suppoted_card" translate="label" type="select" sortOrder="34" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Suppoted Cards</label>
                     <source_model>Elightwalk\Razorpay\Model\Config\Source\OptionArray::suppotedcardOptArr</source_model>
                     <can_be_empty>1</can_be_empty>
-                    <config_path>payment/razorpay/allowspecificcard</config_path>
+                    <config_path>payment/razorpay/allow_suppoted_card</config_path>
                     <depends>
                         <field id="active">1</field>
-                        <field id="card_active">1</field>
+                        <field id="active_card">1</field>
                         
                     </depends>
                 </field>
 
-                <field id="specificcard" translate="label" type="multiselect" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="suppoted_cards" translate="label" type="multiselect" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Select Suppoted Cards</label>
                     <source_model>Elightwalk\Razorpay\Model\Config\Source\AllSpecificArray::suppotedcardOptArray</source_model>
                     <can_be_empty>1</can_be_empty>
-                    <config_path>payment/razorpay/specificcard</config_path>
+                    <config_path>payment/razorpay/suppoted_cards</config_path>
                     <depends>
                         <field id="active">1</field>
-                        <field id="card_active">1</field>
-                        <field id="allowspecificcard">1</field>
+                        <field id="active_card">1</field>
+                        <field id="allow_suppoted_card">1</field>
                     </depends>
                 </field>
                     
-                <field id="netbanking_active" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="active_netbanking" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Netbanking</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <config_path>payment/razorpay/netbanking_active</config_path>
+                    <config_path>payment/razorpay/active_netbanking</config_path>
                     <depends>
                         <field id="active">1</field>
                     </depends>
                 </field>
 
-                <field id="allow_netbanking" translate="label" type="select" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="allow_netbanking_banks" translate="label" type="select" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Netbanking Banks</label>
                     <source_model>Elightwalk\Razorpay\Model\Config\Source\OptionArray::netbankingOptArr</source_model>
-                    <config_path>payment/razorpay/allow_netbanking</config_path>
+                    <config_path>payment/razorpay/allow_netbanking_banks</config_path>
                     <depends>
                         <field id="active">1</field>
-                        <field id="netbanking_active">1</field>
+                        <field id="active_netbanking">1</field>
                     </depends>
                 </field>
 
-                <field id="specific_netbanks" translate="label" type="multiselect" sortOrder="42" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="netbanking_banks" translate="label" type="multiselect" sortOrder="42" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Select Specific Banks</label>
                     <source_model>Elightwalk\Razorpay\Model\Config\Source\AllSpecificArray::netbankingbankOptArr</source_model>
                     <can_be_empty>1</can_be_empty>
-                    <config_path>payment/razorpay/specific_netbanks</config_path>
+                    <config_path>payment/razorpay/netbanking_banks</config_path>
                     <depends>
                         <field id="active">1</field>
-                        <field id="netbanking_active">1</field>
-                        <field id="allow_netbanking">1</field>
+                        <field id="active_netbanking">1</field>
+                        <field id="allow_netbanking_banks">1</field>
                     </depends>
                 </field>
 
-                <field id="wallet_active" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="active_wallet" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Wallet</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <config_path>payment/razorpay/wallet_active</config_path>
+                    <config_path>payment/razorpay/active_wallet</config_path>
                     <depends>
                         <field id="active">1</field>
                     </depends>
                 </field>
 
-                <field id="allow_wallet" translate="label" type="select" sortOrder="51" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="allow_wallet_apps" translate="label" type="select" sortOrder="51" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Wallet Apps</label>
                     <source_model>Elightwalk\Razorpay\Model\Config\Source\OptionArray::walletOptArr</source_model>
-                    <config_path>payment/razorpay/allow_wallet</config_path>
+                    <config_path>payment/razorpay/allow_wallet_apps</config_path>
                     <depends>
                         <field id="active">1</field>
-                        <field id="wallet_active">1</field>
+                        <field id="active_wallet">1</field>
                     </depends>
                 </field>
 
-                <field id="specific_wallet" translate="label" type="multiselect" sortOrder="52" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="wallet_apps" translate="label" type="multiselect" sortOrder="52" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Select wallet Apps</label>
                     <source_model>Elightwalk\Razorpay\Model\Config\Source\AllSpecificArray::walletappsOptArr</source_model>
                     <can_be_empty>1</can_be_empty>
-                    <config_path>payment/razorpay/specific_netbanks</config_path>
+                    <config_path>payment/razorpay/wallet_apps</config_path>
                     <depends>
                         <field id="active">1</field>
-                        <field id="wallet_active">1</field>
-                        <field id="allow_wallet">1</field>
+                        <field id="active_wallet">1</field>
+                        <field id="allow_wallet_apps">1</field>
                     </depends>
                 </field>
 
-                <field id="upi_active" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="active_upi" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>UPI</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <config_path>payment/razorpay/upi_active</config_path>
+                    <config_path>payment/razorpay/active_upi</config_path>
                     <depends>
                         <field id="active">1</field>
                     </depends>
@@ -214,19 +214,19 @@
                     <config_path>payment/razorpay/allow_upi</config_path>
                     <depends>
                         <field id="active">1</field>
-                        <field id="upi_active">1</field>
+                        <field id="active_upi">1</field>
                     </depends>
                 </field>
                 
 
-                <field id="specific_upi" translate="label" type="multiselect" sortOrder="62" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="upi_apps" translate="label" type="multiselect" sortOrder="62" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Select UPI Apps</label>
                     <source_model>Elightwalk\Razorpay\Model\Config\Source\AllSpecificArray::upiappsOptArr</source_model>
                     <can_be_empty>1</can_be_empty>
-                    <config_path>payment/razorpay/specific_upi</config_path>
+                    <config_path>payment/razorpay/upi_apps</config_path>
                     <depends>
                         <field id="active">1</field>
-                        <field id="upi_active">1</field>
+                        <field id="active_upi">1</field>
                         <field id="allow_upi">1</field>
                     </depends>
                 </field>

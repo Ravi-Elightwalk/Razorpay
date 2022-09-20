@@ -165,7 +165,6 @@ define([
                             if (response.is_hosted) {
                                 self.renderHosted(response);
                             } else {
-console.log("response : ", response);
                                 self.renderIframe(response);
                             }
                         } else {
@@ -263,7 +262,6 @@ console.log("response : ", response);
 
             checkRzpOrder: function (data) {
                 var self = this;
-
                 $.ajax({
                     type: 'POST',
                     url: url.build('razorpay/payment/order?' + Math.random().toString(36).substring(10)),
@@ -291,8 +289,6 @@ console.log("response : ", response);
             },
 
             renderIframe: function(data) {  
-console.log("data : ", data);
-
                 var self = this;
 
                 this.merchant_order_id = data.order_id;
@@ -302,12 +298,13 @@ console.log("data : ", data);
                     name: self.getMerchantName(),
                     image: "https://upwork-usw2-prod-assets-static.s3.us-west-2.amazonaws.com/org-logo/1189883131247013888",
                     amount: data.amount,
+                    order_id: data.rzp_order,
                     handler: function (data) {
                         self.rzp_response = data;
                         fullScreenLoader.startLoader();
                         self.checkRzpOrder(data);
                         fullScreenLoader.stopLoader();
-                     },
+                    },
                     modal: {
                         ondismiss: function() {
                             self.isPaymentProcessing.reject("Payment Closed");
@@ -327,98 +324,24 @@ console.log("data : ", data);
                         integration: 'magento',
                         integration_version: data.module_version,
                         integration_parent_version: data.maze_version,
-                    },  
-
+                    },
                     config: {
                         display: {
                             blocks: {
                                 other: {
-                                    name: "Other Payment modes",
-                                    instruments: [{
-                                        method: "card",
-                                        networks: ["MasterCard"],
-                                    },
-                                    {
-                                        method: 'netbanking',
-                                        banks: ["ICIC"]
-                                    },
-                                    {
-                                        method: 'upi',
-                                    },
-                                    {
-                                        method: 'wallet',
-                                        wallets: ["olamoney", "freecharge"]
-                                    }]
+                                    name: "Payment Modes",
+                                    instruments : data.rzp_config,
                                 }
                             },
-                            hide: [{
-                                method: "upi"
-                            }],
                             sequence: ["block.other"],
                             preferences: {
                                 show_default_blocks: false
                             }
                         }
                     },
-                    // order_id: data.rzp_order,
                     
                 };
-
-    // var options = {
-    //     "key": self.getKeyId(),
-    //     "name" : self.getMerchantName(),
-    //     "amount": data.amount,
-    //     "currency": "INR",
-    //     
-    //     // "order_id": data.rzp_order,
-    //     "notes": {
-    //         merchant_order_id: '',
-    //         merchant_quote_id: data.order_id
-    //     },
-    //     "prefill":  {
-    //         "name": this.user.name,
-    //         "email": this.user.email,
-    //         "contact": this.user.contact,
-    //     },
-    //     config: {
-    //         display: {
-    //             blocks: {
-    //                 other: {
-    //                     name: "Other Payment modes",
-    //                     instruments: [{
-    //                         method: "card",
-    //                         networks: ["MasterCard"],
-    //                     },
-    //                     {
-    //                         method: 'netbanking',
-    //                     },
-    //                     {
-    //                         method: 'upi'
-    //                     }]
-    //                 }
-    //             },
-    //             hide: [{
-    //                 method: "upi"
-    //             }],
-    //             sequence: ["block.other"],
-    //             preferences: {
-    //                 show_default_blocks: false
-    //             }
-    //         }
-    //     },
-    //     "handler": function (data) {
-    //         self.rzp_response = data;
-    //         fullScreenLoader.startLoader();
-    //         self.checkRzpOrder(data);
-    //         fullScreenLoader.stopLoader();
-    //     },
-    //     "modal": {
-    //         ondismiss: function() {
-    //             self.isPaymentProcessing.reject("Payment Closed");
-    //         }
-    //     },
-    // };
-
+                
                 if (data.quote_currency !== 'INR') {
 
                     options.display_currency = data.quote_currency;
@@ -443,6 +366,7 @@ console.log("data : ", data);
                     }
                 };
             }
+
         });
     }
 );
