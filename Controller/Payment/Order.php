@@ -16,6 +16,10 @@ class Order extends \Elightwalk\Razorpay\Controller\BaseController {
     protected $logger;
     protected $data;
 
+    protected $_order;
+    protected $_productMetadataInterface;
+    protected $_moduleList;
+    protected $_orderlink;
     
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -27,7 +31,11 @@ class Order extends \Elightwalk\Razorpay\Controller\BaseController {
         \Magento\Framework\App\CacheInterface $cache,
         \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
         \Psr\Log\LoggerInterface $logger,
-        \Elightwalk\Razorpay\Helper\Data $data
+        \Elightwalk\Razorpay\Helper\Data $data,
+        \Magento\Sales\Model\Order $order,
+        \Magento\Framework\App\ProductMetadataInterface $productMetadataInterface,
+        \Magento\Framework\Module\ModuleList $moduleList,
+        \Elightwalk\Razorpay\Model\OrderLink $orderlink
     ) {
         parent::__construct(
             $context,
@@ -46,6 +54,10 @@ class Order extends \Elightwalk\Razorpay\Controller\BaseController {
 
         $this->objectManagement   = \Magento\Framework\App\ObjectManager::getInstance();
         $this->data = $data;
+        $this->_order = $order;
+        $this->_productMetadataInterface = $productMetadataInterface;
+        $this->_moduleList = $moduleList;
+        $this->_orderlink = $orderlink;
     }
 
     public function execute() {
@@ -70,11 +82,10 @@ class Order extends \Elightwalk\Razorpay\Controller\BaseController {
 
                 # fetch the related sales order and verify the payment ID with rzp payment id
                 # To avoid duplicate order entry for same quote
-                $collection = $this->_objectManager->get('Magento\Sales\Model\Order')
-                                                   ->getCollection()
-                                                   ->addFieldToSelect('entity_id')
-                                                   ->addFilter('quote_id', $receipt_id)
-                                                   ->getFirstItem();
+                $collection = $this->_order->getCollection()
+                                            ->addFieldToSelect('entity_id')
+                                            ->addFilter('quote_id', $receipt_id)
+                                            ->getFirstItem();
 
                 $salesOrder = $collection->getData();
 
@@ -83,10 +94,9 @@ class Order extends \Elightwalk\Razorpay\Controller\BaseController {
                     $this->logger->info("Razorpay inside order already processed with webhook quoteID:" . $receipt_id
                                     ." and OrderID:".$salesOrder['entity_id']);
 
-                    $this->checkoutSession
-                            ->setLastQuoteId($this->getQuote()->getId())
-                            ->setLastSuccessQuoteId($this->getQuote()->getId())
-                            ->clearHelperData();
+                    $this->checkoutSession->setLastQuoteId($this->getQuote()->getId())
+                                            ->setLastSuccessQuoteId($this->getQuote()->getId())
+                                            ->clearHelperData();
 
                     $order = $this->orderRepository->get($salesOrder['entity_id']);
 
@@ -98,7 +108,8 @@ class Order extends \Elightwalk\Razorpay\Controller\BaseController {
 
                     $responseContent['order_id'] = true;
                 }
-            } else {
+            } 
+            else {
 
                 if(empty($receipt_id) === false) {
 
@@ -111,8 +122,8 @@ class Order extends \Elightwalk\Razorpay\Controller\BaseController {
                         'sucecss'   => false,
                         'parameters' => []
                     ];
-
-                } else {
+                } 
+                else {
 
                     $this->logger->info("Razorpay order already processed with quoteID:" . $this->checkoutSession
                             ->getLastQuoteId());
@@ -164,7 +175,6 @@ class Order extends \Elightwalk\Razorpay\Controller\BaseController {
 
             //validate quote Shipping method
             if(empty($this->getQuote()->getShippingAddress()->getShippingMethod()) === true) {
-
                 $responseContent = [
                     'message'   => __("Shipping method is required"),
                     'parameters' => []
@@ -174,7 +184,6 @@ class Order extends \Elightwalk\Razorpay\Controller\BaseController {
             }
 
             if(empty($this->getQuote()->getShippingAddress()->getPostcode()) === true) {
-
                 $responseContent = [
                     'message'   => __("Shipping Address is required"),
                     'parameters' => []
@@ -190,8 +199,8 @@ class Order extends \Elightwalk\Razorpay\Controller\BaseController {
 
             $payment_action = $this->config->getPaymentAction();
 
-            $maze_version = $this->_objectManager->get('Magento\Framework\App\ProductMetadataInterface')->getVersion();
-            $module_version =  $this->_objectManager->get('Magento\Framework\Module\ModuleList')->getOne('Elightwalk_Razorpay')['setup_version'];
+            $maze_version = $this->_productMetadataInterface->getVersion();
+            $module_version =  $this->_moduleList->getOne('Elightwalk_Razorpay')['setup_version'];
 
             $this->customerSession->setCustomerEmailAddress($_POST['email']);
             
@@ -202,8 +211,7 @@ class Order extends \Elightwalk\Razorpay\Controller\BaseController {
             try {
 
                 //save to razorpay orderLink
-                $orderLinkCollection = $this->_objectManager->get('Elightwalk\Razorpay\Model\OrderLink')
-                                                       ->getCollection()
+                $orderLinkCollection = $this->_orderlink->getCollection()
                                                        ->addFilter('quote_id', $receipt_id)
                                                        ->getFirstItem();
 
@@ -274,14 +282,13 @@ class Order extends \Elightwalk\Razorpay\Controller\BaseController {
                                             ->setRzpOrderAmount($amount)
                                             ->setEmail($_POST['email'])
                                             ->save();
-                    } else {
-
-                        $orderLnik = $this->_objectManager->create('Elightwalk\Razorpay\Model\OrderLink');
-                        $orderLnik->setQuoteId($receipt_id)
-                                  ->setRzpOrderId($order->id)
-                                  ->setRzpOrderAmount($amount)
-                                  ->setEmail($_POST['email'])
-                                  ->save();
+                    } 
+                    else {
+                        $this->_orderlink->setQuoteId($receipt_id)
+                                        ->setRzpOrderId($order->id)
+                                        ->setRzpOrderAmount($amount)
+                                        ->setEmail($_POST['email'])
+                                        ->save();       
                     }
 
                 }

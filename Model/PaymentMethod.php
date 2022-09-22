@@ -39,6 +39,7 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
     protected $productMetaData;
     protected $regionFactory;
     protected $orderRepository;
+    protected $_orderlink;
 
     public function __construct(
         \Magento\Framework\Model\Context $context,
@@ -85,7 +86,7 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
         $this->rzp = new Api($this->key_id, $this->key_secret);
 
         $this->order = $order;
-        $this->orderLink = $orderLink;
+        $this->_orderLink = $orderLink;
 
         $this->rzp->setHeader('User-Agent', 'Razorpay/'. $this->getChannel());
     }
@@ -135,7 +136,7 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
             //validate RzpOrderamount with quote/order amount before signature
             $orderAmount = (int) (number_format($order->getGrandTotal() * 100, 0, ".", ""));
 
-            $orderLinkCollection = $this->orderLink->getCollection()
+            $orderLinkCollection = $this->_orderLink->getCollection()
                                                     ->addFilter('quote_id', $order->getQuoteId())
                                                     ->getFirstItem();
 
@@ -374,7 +375,7 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
 
         //update orderLink
 
-        $orderLinkCollection = $this->orderLink->getCollection()
+        $orderLinkCollection = $this->_orderLink->getCollection()
                                                 ->addFieldToSelect('entity_id')
                                                 ->addFilter('quote_id', $order->getQuoteId())
                                                 ->addFilter('rzp_order_id', $rzpOrderId)

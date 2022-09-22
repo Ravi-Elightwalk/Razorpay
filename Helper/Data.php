@@ -10,15 +10,17 @@ use Magento\Store\Model\StoreManagerInterface;
 class Data extends AbstractHelper {
 
     protected $_scopeConfig;
-
 	protected $_storeManager;
+    protected $_rzporder;
 
 	public function __construct(
         ScopeConfigInterface $scopeConfig,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        \Elightwalk\Razorpay\Model\RzpOrder $rzporder
     ) {
         $this->_scopeConfig = $scopeConfig;
         $this->_storeManager = $storeManager;
+        $this->_rzporder = $rzporder;
     }
 
    	public function getScopeConfig($path, $storeId = null, $scopeInterface = ScopeInterface::SCOPE_STORE) {
@@ -34,5 +36,13 @@ class Data extends AbstractHelper {
 
         return $this->_storeManager->getStore()->getId();
     }
+
+    public function setRzpOrderData($data = array()) {
+        
+		$this->_rzporder->setRzpPaymentId($data['rzp_payment_id'])
+						->setRzpOrderId($data['rzp_order_id'])
+						->setRzpSignature($data['rzp_signature'])
+						->save();
+    } 
 
 }

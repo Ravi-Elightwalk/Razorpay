@@ -121,7 +121,6 @@
                     <depends>
                         <field id="active">1</field>
                         <field id="active_card">1</field>
-                        
                     </depends>
                 </field>
 
