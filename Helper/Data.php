@@ -23,13 +23,13 @@ class Data extends AbstractHelper {
         $this->_rzporder = $rzporder;
     }
 
-   	public function getScopeConfig($path, $storeId = null, $scopeInterface = ScopeInterface::SCOPE_STORE) {
+    public function getScopeConfig($path, $storeId = null, $scopeInterface = ScopeInterface::SCOPE_STORE) {
         if(!$storeId) {
             return $this->_scopeConfig->getValue($path);
         }
 
         $storeId = $this->getStoreId(); 
-	    return $this->_scopeConfig->getValue($path, $scopeInterface, $storeId);
+        return $this->_scopeConfig->getValue($path, $scopeInterface, $storeId);
 	}
 
     public function getStoreId() {

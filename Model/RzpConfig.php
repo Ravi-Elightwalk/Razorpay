@@ -3,6 +3,7 @@
 namespace Elightwalk\Razorpay\Model;
 
 use Elightwalk\Razorpay\Api\CodeInterface;
+use FG\ASN1\Universal\Boolean;
 
 class RzpConfig implements CodeInterface 
 {
@@ -17,9 +18,8 @@ class RzpConfig implements CodeInterface
     /**
      *  {@inheritdoc}
      */
-    public function getRzpConfig()
+    public function getRzpConfig() : array
     {
-
         $obj = $this->_data->getScopeConfig("payment/razorpay");
         return [$obj];
     }
@@ -34,7 +34,7 @@ class RzpConfig implements CodeInterface
 
         $this->_data->setRzpOrderData($data);
         
-        return "successfully Inserted.";
+        return $data;
     }
 
     private function setRzpOrderData($tbl_name, $data = array()) 

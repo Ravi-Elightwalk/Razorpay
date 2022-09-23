@@ -235,8 +235,8 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
                         }
                         catch(\Razorpay\Api\Errors\Error $e) {
 
-                           $this->_logger->critical($e);
-                           throw new LocalizedException(__('Razorpay Error: %1.', $e->getMessage()));
+                            $this->_logger->critical($e);
+                            throw new LocalizedException(__('Razorpay Error: %1.', $e->getMessage()));
                         }
 
                         if($payment_data->order_id === $rzp_order_id) {
@@ -248,8 +248,8 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
                             }
                             catch(\Razorpay\Api\Errors\Error $e) {
 
-                               $this->_logger->critical($e);
-                               throw new LocalizedException(__('Razorpay Error: %1.', $e->getMessage()));
+                                $this->_logger->critical($e);
+                                throw new LocalizedException(__('Razorpay Error: %1.', $e->getMessage()));
                             }
 
                             //verify order receipt

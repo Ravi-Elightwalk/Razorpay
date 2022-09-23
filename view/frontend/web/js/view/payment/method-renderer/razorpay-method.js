@@ -288,25 +288,6 @@ define([
                 });
             },
 
-            setRzpOrderData: function(params) {
-                var self = this;
-                $.ajax({
-                    type: 'GET',   
-                    url: url.build("rest/V1/elightwalk_razorpay/setrzpdata/"),
-                    data: params,
-
-                    success: function (response) {
-                        console.log("Success: ", response);
-                    },
-
-                    error: function (response) {
-                        fullScreenLoader.stopLoader();
-                        self.isPaymentProcessing.reject(response.message);
-                    }
-                });
-            },
-
-
             renderIframe: function(data) {  
                 var self = this;
 
@@ -319,10 +300,8 @@ define([
                     amount: data.amount,
                     order_id: data.rzp_order,
                     handler: function (data) {
-console.log("Suucess Data : ", data);
                         self.rzp_response = data;
                         fullScreenLoader.startLoader();
-                        self.setRzpOrderData(data);
                         self.checkRzpOrder(data);
                         fullScreenLoader.stopLoader();
                     },
